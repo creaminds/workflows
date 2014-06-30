@@ -3,8 +3,7 @@ var gulp = require('gulp'),
     coffee = require('gulp-coffee'),
     browserify = require('gulp-browserify'),
     compass = require('gulp-compass'),
-    concat = require('gulp-concat'),
-    path = require('path');
+    concat = require('gulp-concat');
 
 var coffeeSources = ['components/coffee/tagline.coffee'];
 var jsSources = [
@@ -30,20 +29,20 @@ gulp.task('js', function() {
 });
 
 gulp.task('compass', function() {
-  gutil.log("project path: " ,path.join(__dirname));
   gulp.src(sassSources)
     .pipe(compass({
-      config_file: './config.rb',
-      css: 'builds/development/css',
-      sass: 'components/saas',
+      sass: 'components/sass',
       image: 'builds/development/images',
-      javascript : 'builds/development/js',
-      debug : true,
-      logging : true,
-      style : 'expanded'
+      style: 'expanded'
     })
     .on('error', gutil.log))
     .pipe(gulp.dest('builds/development/css'))
 });
 
-gulp.task('default',['coffee', 'js', 'compass']);
+gulp.task('watch', function() {
+  gulp.watch(coffeeSources, ['coffee']);
+  gulp.watch(jsSources, ['js']);
+  gulp.watch('components/sass/*.scss', ['compass']);
+});
+
+gulp.task('default', ['coffee', 'js', 'compass', 'watch']);
